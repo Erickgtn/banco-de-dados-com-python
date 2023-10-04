@@ -1,13 +1,15 @@
 import sqlite3
+from menu import menu
 
 #Criação da função para conectar ao banco de dados
 def conectar():
     try:
         global conn
         conn = sqlite3.connect("cadastro.db")
+        print("Conexão realizada com sucesso!")
     except sqlite3.Error as erro:
         print("Erro de Conexão")
-
+conectar()
 """ conn.execute('''
 CREATE table cliente(
   nome string,
@@ -42,6 +44,7 @@ def cadastrarCliente():
         print("Erro ao cadastrar Cliente",erro)
 
 def exibirCliente():
+    conectar()
     resultado = conn.execute("SELECT * FROM cliente").fetchall()
     print(resultado,"\n")
     #conn.close()
@@ -73,14 +76,6 @@ def alterarDados():
         conn.execute("UPDATE cliente SET VALUES ('"+nome+"','"+sobrenome+"','"+str(idade)+"','"+str(cpf)+"','"+str(telefone)+"','"+endereco+"','"+cidade+"','"+estado+"')")
 
 
-
-def menu():
-    print("################ CADASTRO DE CLIENTES ################")
-    print("O que deseja fazer:")
-    print(" 1 - Cadastrar Cliente: \n 2 - Exibir Clientes: \n 3 - Consultar Cliente pelo CPF: \n 4 - Alterar Dados Cadastrais: \n 5 - Excluir Cliente: \n 6 - Sair")
-    global opcao
-    opcao = input()
-    return opcao
 
 
 opcao = menu()
