@@ -57,9 +57,22 @@ def exibirCliente():
 def consultarCliente():
     cpf = input("Informe o CPF que deseja consultar: ")
     try:
-        resultado ='''SELECT * FROM cliente WHERE cpf = ? ''',(cpf,)
-        cursor.execute(resultado).fetchall()
-        print("Cliente encontrado:\n",resultado)
+        resultado = conn.execute('''SELECT * FROM cliente WHERE cpf = ? ''',(cpf,)).fetchall()
+        if(resultado == []):
+            print("CPF não encontrado!")
+        #print("Cliente encontrado ",resultado)
+        else:
+            for result in resultado:
+                print("##################################")
+                print("Nome: ",result[0])
+                print("Sobrenome: ",result[1])
+                print("Idade: ",result[2])
+                print("CPF: ",result[3])
+                print("Telefone: ",result[4])
+                print("Endereco: ",result[5])
+                print("Cidade: ",result[6])
+                print("Estado: ",result[7])
+            #print("Cliente encontrado: ",resultado)
     except sqlite3.Error as erro:
         print("Erro ao encontrar Cliente",erro)
     #conn.close()
@@ -67,15 +80,16 @@ def consultarCliente():
 def alterarDados():
     print("############# Alteração de dados #############")
     cpfPesquisar = consultarCliente()
-    if(cpfPesquisar != 'NULL'):
-        nome  = input("Informe o seu Nome: ")
+    if(cpfPesquisar != []):
+        dado_update = input("O que deseja Alterar?\n Nome\n Sobrenome\n Idade\n Telefone\n Endereco\n Cidade\n Estado\n ").lower()
+        """ nome  = input("Informe o seu Nome: ")
         sobrenome = input("Informe seu Sobrenome: ")
         idade = int(input("Informe sua Idade: "))
         cpf = int(input("Informe seu CPF: "))
         telefone = input("Informe seu Nº de Telefone: ")
         endereco = input("Informe seu Endereco: ")
-        cidade = input("Informe a cidade: ")
-        estado = input("Informe o Estado: ")
+        cidade = input("Informe a Cidade: ")
+        estado = input("Informe o Estado: ") """
 
         cursor.execute("UPDATE cliente SET VALUES ('"+nome+"','"+sobrenome+"','"+str(idade)+"','"+str(cpf)+"','"+str(telefone)+"','"+endereco+"','"+cidade+"','"+estado+"')")
 
