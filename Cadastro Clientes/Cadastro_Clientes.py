@@ -13,9 +13,9 @@ def conectar():
         print("Erro de Conexão")
 
 #Criação da tabela Cliente
-cursor.execute("CREATE TABLE cliente(nome string, sobrenome string, idade integer, cpf integer, telefone integer, endereco string, cidade string, estado string)")
-
-#Criando uma função para fazer conexão com o banco 
+conectar()
+criar_tabela = "CREATE TABLE IF NOT EXISTS cliente(nome string, sobrenome string, idade integer, cpf integer, telefone integer, endereco string, cidade string, estado string)"
+cursor.execute(criar_tabela)
 
 #Criando uma função para coletar dados do cliente
 def cadastrarCliente():
@@ -29,9 +29,10 @@ def cadastrarCliente():
         endereco = input("Informe seu Endereco: ")
         cidade = input("Informe a cidade: ")
         estado = input("Informe o Estado: ")
-    
-        cursor.execute("INSERT INTO cliente VALUES ('"+nome+"','"+sobrenome+"','"+str(idade)+"','"+str(cpf)+"','"+str(telefone)+"','"+endereco+"','"+cidade+"','"+estado+"')")
-        cursor.commit()
+
+        inserir_cliente = "INSERT INTO cliente VALUES ('"+nome+"','"+sobrenome+"','"+str(idade)+"','"+str(cpf)+"','"+str(telefone)+"','"+endereco+"','"+cidade+"','"+estado+"')"
+        cursor.execute(inserir_cliente)
+        conn.commit()
         #conn.close()
         print("CLIENTE CADASTRADO COM SUCESSO")
     except sqlite3.Error as erro:
@@ -40,15 +41,24 @@ def cadastrarCliente():
 def exibirCliente():
     conectar()
     resultado = cursor.execute("SELECT * FROM cliente").fetchall()
-    print(resultado,"\n")
+    for result in resultado:
+        print("##################################")
+        print("Nome: ",result[0])
+        print("Sobrenome: ",result[1])
+        print("Idade: ",result[2])
+        print("CPF: ",result[3])
+        print("Telefone: ",result[4])
+        print("Endereco: ",result[5])
+        print("Cidade: ",result[6])
+        print("Estado: ",result[7])
+    #print(resultado,"\n")
     #conn.close()
 
 def consultarCliente():
     cpf = input("Informe o CPF que deseja consultar: ")
     try:
-        resultado = cursor.execute('''SELECT * FROM cliente
-                                    WHERE cpf = ?
-                                ''',(cpf,)).fetchall()
+        resultado ='''SELECT * FROM cliente WHERE cpf = ? ''',(cpf,)
+        cursor.execute(resultado).fetchall()
         print("Cliente encontrado:\n",resultado)
     except sqlite3.Error as erro:
         print("Erro ao encontrar Cliente",erro)
@@ -68,8 +78,6 @@ def alterarDados():
         estado = input("Informe o Estado: ")
 
         cursor.execute("UPDATE cliente SET VALUES ('"+nome+"','"+sobrenome+"','"+str(idade)+"','"+str(cpf)+"','"+str(telefone)+"','"+endereco+"','"+cidade+"','"+estado+"')")
-
-
 
 
 opcao = menu()
